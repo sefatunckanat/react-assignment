@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useEffect } from "react";
 import axios from "../utils/axios";
+import { wait } from "../utils/helper";
 
 export enum ActionType {
 	SIGN_IN = "SIGN_IN",
@@ -10,18 +11,17 @@ export enum ActionType {
 
 interface IUser {
 	email: string;
+	id: number;
 }
 
 interface IAction {
 	type: ActionType;
-	token?: string;
 	userData?: IUser;
 	loading?: boolean;
-	error?: string | undefined | null;
+	error?: string | null;
 }
 
 interface IAuthState {
-	token: string | undefined | null;
 	userData: IUser | undefined | null;
 	loading: boolean | undefined | null;
 	error: string | undefined | null;
@@ -36,10 +36,14 @@ export interface IAuthContext {
 	loggedIn: () => boolean;
 }
 
+interface ILoginResponse {
+	accessToken: string;
+	user: IUser;
+}
+
 const initialState: IAuthState = {
-	token: null,
 	userData: null,
-	loading: false,
+	loading: true,
 	error: null,
 	loggedIn: false,
 };
@@ -53,7 +57,7 @@ const Reducer = (state: IAuthState, action: IAction): typeof initialState => {
 		case ActionType.SET_ERROR:
 			return { ...state, error: action.error, loading: false };
 		case ActionType.LOGOUT:
-			return { ...state, token: null, userData: null };
+			return { ...state, userData: null, loading: false };
 		default:
 			throw new Error();
 	}
@@ -67,6 +71,18 @@ const AuthContext = React.createContext<IAuthContext>({
 	loggedIn: () => false,
 });
 
+const setSession = (accessToken: string | null | undefined) => {
+	if (accessToken) {
+		localStorage.setItem("Token", accessToken);
+		axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+	} else {
+		localStorage.removeItem("Token");
+		delete axios.defaults.headers.common.Authorization;
+	}
+	console.log("Loaded access token", accessToken);
+	return null;
+};
+
 const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 	const [state, dispatch] = React.useReducer(
 		Reducer,
@@ -78,13 +94,17 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 		try {
 			const request = await axios.post("/login", { email, password });
-			const response = await request.data;
+			const response: ILoginResponse = await request.data;
 
-			console.log(response);
+			if (response.accessToken) {
+				setSession(response.accessToken);
+				dispatch({ type: ActionType.SIGN_IN, userData: response.user });
+				dispatch({ type: ActionType.SET_ERROR, error: null });
+			}
 		} catch (error) {
-			if (error instanceof Error) {
-				const errorMessage: string = error.message;
-				dispatch({ type: ActionType.SET_LOADING, error: errorMessage });
+			if (typeof error === "string") {
+				console.log("ERROR", error);
+				dispatch({ type: ActionType.SET_ERROR, error });
 			}
 		}
 
@@ -93,12 +113,47 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
 	const onLogout = () => {
 		dispatch({ type: ActionType.LOGOUT });
+		setSession(null);
 		return true;
+	};
+
+	const loadProfile = async () => {
+		dispatch({ type: ActionType.SET_LOADING, loading: true });
+		try {
+			await wait();
+			await axios.get("/products");
+			// BUG: Rest api servisinde token verify olmadığı icin yapılamadı.
+			// Onun yerine localStorage daki tokeni ile ürün listesi sorgulayıp
+			// Bir sorun olmama durumunda yüklenen user listesinden ilk kullanıcı set ediyorum.
+
+			const req = await axios.get("/users");
+			const { data } = req;
+			if (data) {
+				dispatch({
+					type: ActionType.SIGN_IN,
+					userData: { email: data[0].email, id: data[0].id },
+				});
+			}
+		} catch (error) {
+			onLogout();
+		}
+
+		dispatch({ type: ActionType.SET_LOADING, loading: false });
 	};
 
 	const loggedIn = () => {
 		return !!state.userData;
 	};
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem("Token");
+		if (accessToken) {
+			setSession(accessToken);
+			loadProfile();
+		} else {
+			dispatch({ type: ActionType.SET_LOADING, loading: false });
+		}
+	}, []);
 
 	const value = { state, dispatch, onSignIn, onLogout, loggedIn };
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

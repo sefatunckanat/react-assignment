@@ -1,17 +1,18 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import LoginScreen from "./LoginScreen";
 
 export const RouteMain = () => {
-	const { state, loggedIn } = useContext(AuthContext);
+	const { loggedIn, state, onLogout } = useContext(AuthContext);
 
 	if (state.loading) return <div>Loading</div>;
 
-	if (!loggedIn)
-		return (
-			<form>
-				<input type="text" placeholder="E-mail" />
-			</form>
-		);
+	if (!loggedIn()) return <LoginScreen />;
 
-	return <main>Main</main>;
+	return (
+		<main>
+			<pre>{JSON.stringify(state, null, 2)}</pre>
+			<button onClick={() => onLogout()}>Logout</button>
+		</main>
+	);
 };
