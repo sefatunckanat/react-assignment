@@ -7,11 +7,14 @@
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"json-server": "json-server --watch ./mock/database.json -m ./node_modules/json-server-auth -r ./mock/routes.json"
 	},
 	"dependencies": {
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"json-server": "^0.17.3",
+		"json-server-auth": "^2.1.0"
 	},
 	"devDependencies": {
 		"@types/react": "^18.0.37",
