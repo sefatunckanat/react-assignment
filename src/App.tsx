@@ -1,5 +1,12 @@
+import { AuthContextProvider } from "./contexts/AuthContext";
+import { RouteMain } from "./routes";
+
 function App() {
-	return <></>;
+	return (
+		<AuthContextProvider>
+			<RouteMain />
+		</AuthContextProvider>
+	);
 }
 
 export default App;
