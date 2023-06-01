@@ -4,18 +4,7 @@ import axios from "../../utils/axios";
 import { Avatar, Badge, Title } from "../../components";
 import { NavLink } from "react-router-dom";
 import { wait } from "../../utils/helper";
-
-interface Product {
-	id: number;
-	title: string;
-	description: string;
-	price: number;
-	discountPercentage: number;
-	rating: number;
-	stock: number;
-	thumbnail: string;
-	category: string;
-}
+import { Product } from "../../global/types";
 
 export default function ProductList() {
 	const [products, setProducts] = useState<Product[]>([]);
