@@ -1,6 +1,8 @@
 import React, { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 
+import styles from "./LoginForm.module.sass";
+
 export default function LoginForm() {
 	const { state, onSignIn } = useContext(AuthContext);
 	const { error } = state;
@@ -13,7 +15,7 @@ export default function LoginForm() {
 		onSignIn(email, password);
 	};
 	return (
-		<form onSubmit={handleOnSubmit}>
+		<form className={styles.LoginForm} onSubmit={handleOnSubmit}>
 			{error && <div>{error}</div>}
 			<input
 				type="text"

@@ -1,0 +1,39 @@
+.AuthLayout
+  position: relative
+  height: 100vh
+  display: flex
+  justify-content: flex-end
+
+  &::after
+    content:''
+    display: inline-block
+    position: absolute
+    left: 0
+    top: 0
+    width: 50%
+    height: 100%
+    background-image: url('https://images.unsplash.com/photo-1432821596592-e2c18b78144f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')
+    background-position: left center
+    background-size: cover
+
+  main
+    flex: 1
+    max-width: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    box-shadow: 0 0 20px rgba(#000,.9)
+    position: relative
+    z-index: 1
+    gap: 1em
+    flex-direction: column
+    padding-left: 1em
+    padding-right: 1em
+
+@media screen and (max-width: 640px)
+  .AuthLayout
+    &::after
+      display: none
+    main
+      max-width: 100%
+      box-shadow: none
