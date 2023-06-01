@@ -2,6 +2,7 @@ import React, { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 
 import styles from "./LoginForm.module.sass";
+import { Button, TextInput } from "../../../components";
 
 export default function LoginForm() {
 	const { state, onSignIn } = useContext(AuthContext);
@@ -16,22 +17,22 @@ export default function LoginForm() {
 	};
 	return (
 		<form className={styles.LoginForm} onSubmit={handleOnSubmit}>
-			{error && <div>{error}</div>}
-			<input
+			<TextInput
 				type="text"
+				label="E-mail"
 				value={email}
 				onChange={(e) => setEmail(e.target.value)}
-				placeholder="E-mail"
 				required
 			/>
-			<input
+			<TextInput
 				type="password"
+				label="Password"
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
-				placeholder="Password"
 				required
 			/>
-			<input type="submit" />
+			<Button type="submit" title="Sign In" />
+			{error && <div className={styles.LoginForm__error}>{error}</div>}
 		</form>
 	);
 }

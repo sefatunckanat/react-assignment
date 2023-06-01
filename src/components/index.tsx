@@ -1,3 +1,5 @@
 import AppLogo from "./AppLogo";
+import Button from "./Button";
+import TextInput from "./TextInput";
 
-export { AppLogo };
+export { AppLogo, TextInput, Button };

@@ -1,0 +1,20 @@
+button.Button
+  display: block
+  padding: 8px 0
+  border-radius: 6px
+  border: 1px solid var(--indigo-500)
+  background: var(--indigo-500)
+  font-weight: 500
+  outline: none
+  transition: .2s
+  color: var(--white)
+  &:hover:not(&:disabled)
+    cursor: pointer
+    background: var(--indigo-600)
+  &:focus-visible,
+  &:focus
+    background: var(--indigo-600)
+  &:disabled
+    opacity: .75
+    color: var(--white)
+    
