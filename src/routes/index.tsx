@@ -4,6 +4,7 @@ import LoginScreen from "./LoginScreen";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import DashboardScreen from "./DashboardScreen";
 import ProductScreen from "./ProductsScreen";
+import ProductDetailScreen from "./ProductDetailScreen";
 
 const router = createBrowserRouter([
 	{
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
 			},
 			{
 				path: ":productId",
-				element: <div>Detay</div>,
+				element: <ProductDetailScreen />,
 			},
 		],
 	},
