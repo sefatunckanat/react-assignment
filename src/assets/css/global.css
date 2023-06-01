@@ -17,6 +17,7 @@
 	--input-border-color--focus: #999;
 	--red-500: rgb(220, 49, 49);
 	--white: #fff;
+	--black: #000;
 
 	--indigo-200: rgb(144, 110, 239);
 	--indigo-300: rgb(127, 93, 221);
@@ -25,6 +26,7 @@
 
 	--green-500: rgb(58, 161, 33);
 	--green-600: rgb(53, 145, 30);
+	--green-100: rgb(184, 207, 178);
 }
 
 *,
