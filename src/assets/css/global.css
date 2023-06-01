@@ -52,3 +52,12 @@ h1 {
 	font-size: 3.2em;
 	line-height: 1.1;
 }
+
+img {
+	max-width: 100%;
+	vertical-align: middle;
+}
+
+table {
+	width: 100%;
+}
