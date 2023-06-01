@@ -1,18 +1,22 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import LoginScreen from "./LoginScreen";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import DashboardScreen from "./DashboardScreen";
+
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <DashboardScreen />,
+	},
+]);
 
 export const RouteMain = () => {
-	const { loggedIn, state, onLogout } = useContext(AuthContext);
+	const { loggedIn, state } = useContext(AuthContext);
 
 	if (state.loading) return <div>Loading</div>;
 
 	if (!loggedIn()) return <LoginScreen />;
 
-	return (
-		<main>
-			<pre>{JSON.stringify(state, null, 2)}</pre>
-			<button onClick={() => onLogout()}>Logout</button>
-		</main>
-	);
+	return <RouterProvider router={router} />;
 };
