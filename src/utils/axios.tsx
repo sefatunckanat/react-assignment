@@ -7,10 +7,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
 	(response) => response,
-	(error) =>
-		Promise.reject(
-			(error.response && error.response.data) || "Something went wrong"
-		)
+	(error) => {
+		if (typeof error.response.data === "string")
+			return Promise.reject(error.response.data);
+		return Promise.reject("Something went wrong");
+	}
 );
 
 export default axiosInstance;

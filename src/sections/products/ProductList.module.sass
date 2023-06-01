@@ -1,6 +1,35 @@
 .ProductList
   position: relative
 
+  &__tableWrapper
+    position: relative
+    border-radius: 12px
+    overflow: hidden
+  
+  &__error
+    position: absolute
+    left: 0
+    width: 100%
+    height: 100%
+    display: flex
+    font-weight: 600
+    align-items: center
+    justify-content: center
+    z-index: 10
+    background: rgba(#400b0b,.9)
+
+  &__loading
+    position: absolute
+    left: 0
+    width: 100%
+    height: 100%
+    display: flex
+    font-weight: 600
+    align-items: center
+    justify-content: center
+    z-index: 10
+    background: rgba(#000,.75)
+
   table
     border-collapse: collapse
     thead
@@ -11,6 +40,8 @@
     tbody
       td
         padding: 5px 10px
+        a
+          font-size: 14px
       tr:nth-child(2n)
         td
           background: rgba(#444,.1)

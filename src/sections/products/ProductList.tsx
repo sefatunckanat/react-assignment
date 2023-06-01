@@ -3,6 +3,7 @@ import styles from "./ProductList.module.sass";
 import axios from "../../utils/axios";
 import { Avatar, Badge, Title } from "../../components";
 import { NavLink } from "react-router-dom";
+import { wait } from "../../utils/helper";
 
 interface Product {
 	id: number;
@@ -18,11 +19,20 @@ interface Product {
 
 export default function ProductList() {
 	const [products, setProducts] = useState<Product[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [error, setError] = useState<null | string>(null);
 
 	const loadProducts = async () => {
-		const request = await axios.get("/products");
-		const response = request.data;
-		setProducts(response);
+		setLoading(true);
+		try {
+			await wait(250);
+			const request = await axios.get("/products");
+			const response = request.data;
+			setProducts(response);
+		} catch (error) {
+			if (typeof error === "string") setError(error);
+		}
+		setLoading(false);
 	};
 	useEffect(() => {
 		loadProducts();
@@ -31,36 +41,40 @@ export default function ProductList() {
 	return (
 		<div className={styles.ProductList}>
 			<Title>Product List</Title>
-			<table>
-				<thead>
-					<tr>
-						<th></th>
-						<th>Title</th>
-						<th>Price</th>
-						<th>Category</th>
-						<th>Rating</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{products.map((product) => (
-						<tr key={product.id}>
-							<td>
-								<Avatar src={product.thumbnail} />
-							</td>
-							<td>{product.title}</td>
-							<td>$ {product.price}</td>
-							<td>
-								<Badge label={product.category} />
-							</td>
-							<td>{product.rating}</td>
-							<td>
-								<NavLink to={`/products/${product.id}`}>View Product</NavLink>
-							</td>
+			<div className={styles.ProductList__tableWrapper}>
+				{loading && <div className={styles.ProductList__loading}>Loading</div>}
+				{error && <div className={styles.ProductList__error}>{error}</div>}
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>Title</th>
+							<th>Price</th>
+							<th>Category</th>
+							<th>Rating</th>
+							<th></th>
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{products.map((product) => (
+							<tr key={product.id}>
+								<td>
+									<Avatar src={product.thumbnail} />
+								</td>
+								<td>{product.title}</td>
+								<td>$ {product.price}</td>
+								<td>
+									<Badge label={product.category} />
+								</td>
+								<td>{product.rating}</td>
+								<td>
+									<NavLink to={`/products/${product.id}`}>View Product</NavLink>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	);
 }
