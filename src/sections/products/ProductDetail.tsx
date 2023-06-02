@@ -4,7 +4,7 @@ import axios from "../../utils/axios";
 import { Product } from "../../global/types";
 
 import styles from "./ProductDetail.module.sass";
-import { Title } from "../../components";
+import { Badge, Title, TabView } from "../../components";
 import { getDateWithFormat } from "../../utils/helper";
 
 const DetailItem = ({
@@ -18,6 +18,27 @@ const DetailItem = ({
 		<div className={styles.DetailItem}>
 			<div>{label}</div>
 			<div>{value}</div>
+		</div>
+	);
+};
+
+const DetailedContent = ({ product }: { product: Product }) => {
+	return (
+		<div>
+			<DetailItem
+				label="Category:"
+				value={<Badge label={product.category} />}
+			/>
+			<DetailItem label="Title:" value={product.title} />
+			<DetailItem label="Description:" value={product.description} />
+			<DetailItem label="Brand:" value={product.brand} />
+			<DetailItem label="Price:" value={`$ ${product.price}`} />
+			<DetailItem label="Stock:" value={product.stock} />
+			<DetailItem label="Stock:" value={product.stock} />
+			<DetailItem
+				label="Arrival Date:"
+				value={getDateWithFormat(product.arrivalDate, "mm.DD.YYYY")}
+			/>
 		</div>
 	);
 };
@@ -84,6 +105,15 @@ export default function ProductDetail() {
 					</div>
 				</div>
 			</div>
+			<TabView
+				tabs={[
+					{
+						label: "Product Details",
+						content: <DetailedContent product={product} />,
+					},
+					{ label: "Comments", content: <div>comments</div> },
+				]}
+			/>
 
 			<pre>{JSON.stringify(product, null, 2)}</pre>
 		</div>

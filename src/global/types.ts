@@ -10,4 +10,5 @@ export interface Product {
 	category: string;
 	images: string[];
 	arrivalDate: string;
+	brand: string;
 }

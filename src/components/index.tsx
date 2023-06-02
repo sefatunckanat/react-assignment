@@ -6,6 +6,7 @@ import WelcomeCard from "./WelcomeCard";
 import Avatar from "./Avatar";
 import Badge from "./Badge";
 import Title from "./Title";
+import TabView from "./TabView";
 
 export {
 	AppLogo,
@@ -16,4 +17,5 @@ export {
 	Avatar,
 	Badge,
 	Title,
+	TabView,
 };
