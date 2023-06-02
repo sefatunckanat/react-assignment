@@ -489,6 +489,20 @@
       "comment": "Good product !",
       "rating": "5",
       "id": 1
+    },
+    {
+      "productId": "1",
+      "comment": "Bad product !",
+      "rating": 1,
+      "createdAt": "2023-06-02T22:21:28.285Z",
+      "id": 2
+    },
+    {
+      "productId": "1",
+      "comment": "Form reset Test !",
+      "rating": 4,
+      "createdAt": "2023-06-02T22:22:55.343Z",
+      "id": 3
     }
   ],
   "users": [

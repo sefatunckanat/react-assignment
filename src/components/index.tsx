@@ -7,6 +7,7 @@ import Avatar from "./Avatar";
 import Badge from "./Badge";
 import Title from "./Title";
 import TabView from "./TabView";
+import StarRating from "./StarRating";
 
 export {
 	AppLogo,
@@ -18,4 +19,5 @@ export {
 	Badge,
 	Title,
 	TabView,
+	StarRating,
 };

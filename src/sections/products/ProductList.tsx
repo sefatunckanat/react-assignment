@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ProductList.module.sass";
 import axios from "../../utils/axios";
-import { Avatar, Badge, Title } from "../../components";
+import { Avatar, Badge, StarRating, Title } from "../../components";
 import { NavLink } from "react-router-dom";
 import { wait } from "../../utils/helper";
 import { Product } from "../../global/types";
@@ -55,7 +55,9 @@ export default function ProductList() {
 								<td>
 									<Badge label={product.category} />
 								</td>
-								<td>{product.rating}</td>
+								<td>
+									<StarRating value={product.rating} readOnly />
+								</td>
 								<td>
 									<NavLink to={`/products/${product.id}`}>View Product</NavLink>
 								</td>

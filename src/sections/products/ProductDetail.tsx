@@ -9,7 +9,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Review, Product } from "../../global/types";
 
 import styles from "./ProductDetail.module.sass";
-import { Badge, Title, TabView, TextInput, Button } from "../../components";
+import {
+	Badge,
+	Title,
+	TabView,
+	TextInput,
+	Button,
+	StarRating,
+} from "../../components";
 import { getDateWithFormat } from "../../utils/helper";
 import axios from "../../utils/axios";
 
@@ -59,7 +66,7 @@ const ReviewsContent = ({
 	setReviews: Dispatch<Review[]>;
 }) => {
 	const [comment, setComment] = useState("");
-	const [rating, setRating] = useState("");
+	const [rating, setRating] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -80,6 +87,8 @@ const ReviewsContent = ({
 			const insertedReview: Review = { ...resCommentPost };
 
 			setReviews([...reviews, insertedReview]);
+			setComment("");
+			setRating(0);
 		} catch (err: any) {
 			setError(err);
 		}
@@ -122,19 +131,17 @@ const ReviewsContent = ({
 							value={comment}
 							onChange={(e) => setComment(e.target.value)}
 						/>
-						<TextInput
-							type="text"
-							label="Rating"
+						<StarRating
 							value={rating}
-							onChange={(e) => setRating(e.target.value)}
+							onChange={(value) => {
+								setRating(value);
+							}}
 						/>
 						<div>
 							<Button
 								type="submit"
 								title="Send Comment"
-								disabled={
-									!comment.trim().length || !rating.trim().length || loading
-								}
+								disabled={!comment.trim().length || rating < 1 || loading}
 							/>
 							{error && (
 								<div className={styles.ReviewsContent__newReview__error}>
@@ -179,12 +186,13 @@ export default function ProductDetail() {
 	};
 
 	const getAverageRating = () => {
+		if (!reviews.length) return 0;
 		return (
 			reviews.reduce(
 				(prev, val) => prev + parseFloat(val.rating.toString()),
 				0
 			) / reviews.length
-		).toFixed(2);
+		);
 	};
 
 	useEffect(() => {
@@ -225,7 +233,10 @@ export default function ProductDetail() {
 							value={getDateWithFormat(product.arrivalDate, "MM.DD.YYYY")}
 						/>
 						<DetailItem label="Reviews Count:" value={reviews?.length} />
-						<DetailItem label="Average Rating:" value={getAverageRating()} />
+						<DetailItem
+							label="Average Rating:"
+							value={<StarRating value={getAverageRating()} readOnly />}
+						/>
 					</div>
 				</div>
 			</div>
