@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ProductList.module.sass";
 import axios from "../../utils/axios";
-import { Avatar, Badge, StarRating, Title } from "../../components";
+import { AppLoader, Avatar, Badge, StarRating, Title } from "../../components";
 import { NavLink } from "react-router-dom";
 import { wait } from "../../utils/helper";
 import { Product } from "../../global/types";
@@ -14,7 +14,7 @@ export default function ProductList() {
 	const loadProducts = async () => {
 		setLoading(true);
 		try {
-			await wait(250);
+			await wait();
 			const request = await axios.get("/products");
 			const response = request.data;
 			setProducts(response);
@@ -31,7 +31,7 @@ export default function ProductList() {
 		<div className={styles.ProductList}>
 			<Title>Product List</Title>
 			<div className={styles.ProductList__tableWrapper}>
-				{loading && <div className={styles.ProductList__loading}>Loading</div>}
+				{loading && <AppLoader label="Products Loading..." />}
 				{error && <div className={styles.ProductList__error}>{error}</div>}
 				<table>
 					<thead>

@@ -16,8 +16,9 @@ import {
 	TextInput,
 	Button,
 	StarRating,
+	AppLoader,
 } from "../../components";
-import { getDateWithFormat } from "../../utils/helper";
+import { getDateWithFormat, wait } from "../../utils/helper";
 import axios from "../../utils/axios";
 
 const DetailItem = ({
@@ -166,6 +167,7 @@ export default function ProductDetail() {
 
 	const loadProduct = async () => {
 		try {
+			await wait();
 			const reqProduct = await axios.get("/products/" + productId);
 			const resProduct = await reqProduct.data;
 			setProduct(resProduct);
@@ -203,7 +205,7 @@ export default function ProductDetail() {
 		navigate("/products");
 		return <></>;
 	}
-	if (!product) return <>Loading</>;
+	if (!product) return <AppLoader label="Product Loading..." />;
 
 	return (
 		<div className={styles.ProductDetail}>

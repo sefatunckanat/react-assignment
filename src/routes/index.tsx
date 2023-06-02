@@ -9,6 +9,7 @@ import {
 import DashboardScreen from "./DashboardScreen";
 import ProductScreen from "./ProductsScreen";
 import ProductDetailScreen from "./ProductDetailScreen";
+import { AppLoader } from "../components";
 
 const router = createBrowserRouter([
 	{
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
 export const RouteMain = () => {
 	const { loggedIn, state } = useContext(AuthContext);
 
-	if (state.loading) return <div>Loading</div>;
+	if (state.loading) return <AppLoader />;
 
 	if (!loggedIn()) return <LoginScreen />;
 
