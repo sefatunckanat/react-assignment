@@ -12,7 +12,6 @@ import styles from "./ProductDetail.module.sass";
 import { Badge, Title, TabView, TextInput, Button } from "../../components";
 import { getDateWithFormat } from "../../utils/helper";
 import axios from "../../utils/axios";
-import { AxiosError } from "axios";
 
 const DetailItem = ({
 	label,
@@ -67,6 +66,7 @@ const ReviewsContent = ({
 	const handleSendComment = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setLoading(true);
+		setError(null);
 
 		try {
 			const reqCommentPost = await axios.post("/comments", {
