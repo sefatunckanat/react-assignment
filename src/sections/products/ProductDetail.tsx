@@ -57,7 +57,16 @@ export default function ProductDetail() {
 			<Title>{product.title}</Title>
 			<div className={styles.ProductDetail__top}>
 				<div className={styles.ProductDetail__cover}>
-					<img src={product?.images[0]} alt={product?.title} />
+					<img
+						className={styles.ProductDetail__cover__image}
+						src={product?.images[0]}
+						alt={product?.title}
+					/>
+					<img
+						className={styles.ProductDetail__cover__bg}
+						src={product?.images[0]}
+						alt={product?.title}
+					/>
 				</div>
 				<div className={styles.ProductDetail__details}>
 					<div className={styles.ProductDetail__col}>
