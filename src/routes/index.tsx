@@ -1,7 +1,11 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import LoginScreen from "./LoginScreen";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import {
+	Navigate,
+	RouterProvider,
+	createBrowserRouter,
+} from "react-router-dom";
 import DashboardScreen from "./DashboardScreen";
 import ProductScreen from "./ProductsScreen";
 import ProductDetailScreen from "./ProductDetailScreen";
@@ -9,7 +13,7 @@ import ProductDetailScreen from "./ProductDetailScreen";
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <DashboardScreen />,
+		element: <Navigate to={"/products"} />,
 	},
 	{
 		path: "/products",

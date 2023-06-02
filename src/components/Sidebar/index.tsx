@@ -7,6 +7,8 @@ import { NavLink } from "react-router-dom";
 import dashboardIcon from "../../assets/svg/dashboard.svg";
 import productsIcon from "../../assets/svg/products.svg";
 
+const MENUS = [{ title: "Products", href: "/products", icon: productsIcon }];
+
 export default function Sidebar() {
 	return (
 		<div className={styles.Sidebar}>
@@ -14,20 +16,16 @@ export default function Sidebar() {
 				<AppLogo />
 			</div>
 			<nav>
-				<NavLink
-					className={({ isActive }) => (isActive ? styles.active : "")}
-					to={"/"}
-				>
-					<img src={dashboardIcon} />
-					<span>Dashboard</span>
-				</NavLink>
-				<NavLink
-					className={({ isActive }) => (isActive ? styles.active : "")}
-					to={"/products"}
-				>
-					<img src={productsIcon} alt="Products" />
-					<span>Products</span>
-				</NavLink>
+				{MENUS.map((menu, index) => (
+					<NavLink
+						key={index}
+						className={({ isActive }) => (isActive ? styles.active : "")}
+						to={menu.href}
+					>
+						<img src={menu.icon} />
+						<span>{menu.title}</span>
+					</NavLink>
+				))}
 			</nav>
 			<div className={styles.Sidebar__footer}>
 				<Button title="Logout" />
