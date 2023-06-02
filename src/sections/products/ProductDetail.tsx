@@ -12,6 +12,7 @@ import styles from "./ProductDetail.module.sass";
 import { Badge, Title, TabView, TextInput, Button } from "../../components";
 import { getDateWithFormat } from "../../utils/helper";
 import axios from "../../utils/axios";
+import { AxiosError } from "axios";
 
 const DetailItem = ({
 	label,
@@ -43,7 +44,7 @@ const DetailedContent = ({ product }: { product: Product }) => {
 			<DetailItem label="Stock:" value={product.stock} />
 			<DetailItem
 				label="Arrival Date:"
-				value={getDateWithFormat(product.arrivalDate, "mm.DD.YYYY")}
+				value={getDateWithFormat(product.arrivalDate, "MM.DD.YYYY")}
 			/>
 		</div>
 	);
@@ -60,20 +61,30 @@ const ReviewsContent = ({
 }) => {
 	const [comment, setComment] = useState("");
 	const [rating, setRating] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const handleSendComment = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setLoading(true);
 
-		const reqCommentPost = await axios.post("/comments", {
-			productId,
-			comment,
-			rating,
-		});
-		const resCommentPost = await reqCommentPost.data;
+		try {
+			const reqCommentPost = await axios.post("/comments", {
+				productId,
+				comment,
+				rating,
+				createdAt: new Date(),
+			});
+			const resCommentPost = await reqCommentPost.data;
 
-		const insertedReview: Review = { ...resCommentPost };
+			const insertedReview: Review = { ...resCommentPost };
 
-		setReviews([...reviews, insertedReview]);
+			setReviews([...reviews, insertedReview]);
+		} catch (err: any) {
+			setError(err);
+		}
+
+		setLoading(false);
 	};
 
 	return (
@@ -92,7 +103,7 @@ const ReviewsContent = ({
 								<DetailItem label="Rating:" value={review.rating} />
 								<DetailItem
 									label="Created At:"
-									value={getDateWithFormat(review.createdAt, "mm.DD.YYYY")}
+									value={getDateWithFormat(review.createdAt, "MM.DD.YYYY")}
 								/>
 							</div>
 						))}
@@ -121,8 +132,15 @@ const ReviewsContent = ({
 							<Button
 								type="submit"
 								title="Send Comment"
-								disabled={!comment.trim().length || !rating.trim().length}
+								disabled={
+									!comment.trim().length || !rating.trim().length || loading
+								}
 							/>
+							{error && (
+								<div className={styles.ReviewsContent__newReview__error}>
+									{error}
+								</div>
+							)}
 						</div>
 					</form>
 				</div>
@@ -160,13 +178,22 @@ export default function ProductDetail() {
 		}
 	};
 
+	const getAverageRating = () => {
+		return (
+			reviews.reduce(
+				(prev, val) => prev + parseFloat(val.rating.toString()),
+				0
+			) / reviews.length
+		).toFixed(2);
+	};
+
 	useEffect(() => {
 		loadProduct();
 	}, []);
 
 	if (!productId) {
 		navigate("/products");
-		return;
+		return <></>;
 	}
 	if (!product) return <>Loading</>;
 
@@ -195,10 +222,10 @@ export default function ProductDetail() {
 					<div className={styles.ProductDetail__col}>
 						<DetailItem
 							label="Arrival Date:"
-							value={getDateWithFormat(product.arrivalDate, "mm.DD.YYYY")}
+							value={getDateWithFormat(product.arrivalDate, "MM.DD.YYYY")}
 						/>
 						<DetailItem label="Reviews Count:" value={reviews?.length} />
-						<DetailItem label="Avarage Rating:" value={product.rating} />
+						<DetailItem label="Average Rating:" value={getAverageRating()} />
 					</div>
 				</div>
 			</div>
