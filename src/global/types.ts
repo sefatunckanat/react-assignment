@@ -12,3 +12,10 @@ export interface Product {
 	arrivalDate: string;
 	brand: string;
 }
+
+export interface Review {
+	productId: number;
+	comment: string;
+	createdAt: string;
+	rating: number;
+}
