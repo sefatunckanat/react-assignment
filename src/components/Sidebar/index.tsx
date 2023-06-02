@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { AppLogo, Button } from "..";
 
 import styles from "./Sidebar.module.sass";
@@ -6,10 +6,13 @@ import { NavLink } from "react-router-dom";
 
 import dashboardIcon from "../../assets/svg/dashboard.svg";
 import productsIcon from "../../assets/svg/products.svg";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const MENUS = [{ title: "Products", href: "/products", icon: productsIcon }];
 
 export default function Sidebar() {
+	const { onLogout } = useContext(AuthContext);
+
 	return (
 		<div className={styles.Sidebar}>
 			<div className={styles.Sidebar__applogo}>
@@ -28,7 +31,7 @@ export default function Sidebar() {
 				))}
 			</nav>
 			<div className={styles.Sidebar__footer}>
-				<Button title="Logout" />
+				<Button onClick={() => onLogout()} title="Logout" />
 			</div>
 		</div>
 	);
