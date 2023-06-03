@@ -43,6 +43,18 @@ const useProduct = (productId: string | undefined) => {
 		);
 	};
 
+	const updateRating = async (newRating: number) => {
+		if (!newRating) return;
+		await axios.patch("/products/" + productId, {
+			rating: parseFloat(newRating.toFixed(2)),
+		});
+	};
+
+	useEffect(() => {
+		const average = getAverageRating();
+		updateRating(average);
+	}, [reviews]);
+
 	return { product, reviews, setReviews, getAverageRating };
 };
 

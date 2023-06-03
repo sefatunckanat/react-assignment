@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode } from "react";
+import React, { Dispatch, ReactNode, useEffect } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { Review, Product } from "../../global/types";
 

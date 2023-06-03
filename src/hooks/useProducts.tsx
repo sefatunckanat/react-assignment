@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Product } from "../global/types";
 import { wait } from "../utils/helper";
+import axios from "../utils/axios";
 
 const useProducts = () => {
 	const [products, setProducts] = useState<Product[]>([]);
