@@ -1,11 +1,5 @@
-import React, {
-	Dispatch,
-	FormEvent,
-	ReactNode,
-	useEffect,
-	useState,
-} from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { Dispatch, ReactNode } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import { Review, Product } from "../../global/types";
 
 import styles from "./ProductDetail.module.sass";
@@ -18,8 +12,9 @@ import {
 	StarRating,
 	AppLoader,
 } from "../../components";
-import { getDateWithFormat, wait } from "../../utils/helper";
-import axios from "../../utils/axios";
+import { getDateWithFormat } from "../../utils/helper";
+import useProduct from "../../hooks/useProduct";
+import useReviews from "../../hooks/useReviews";
 
 const DetailItem = ({
 	label,
@@ -48,7 +43,6 @@ const DetailedContent = ({ product }: { product: Product }) => {
 			<DetailItem label="Brand:" value={product.brand} />
 			<DetailItem label="Price:" value={`$ ${product.price}`} />
 			<DetailItem label="Stock:" value={product.stock} />
-			<DetailItem label="Stock:" value={product.stock} />
 			<DetailItem
 				label="Arrival Date:"
 				value={getDateWithFormat(product.arrivalDate, "MM.DD.YYYY")}
@@ -66,36 +60,15 @@ const ReviewsContent = ({
 	productId: string;
 	setReviews: Dispatch<Review[]>;
 }) => {
-	const [comment, setComment] = useState("");
-	const [rating, setRating] = useState(0);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-
-	const handleSendComment = async (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setLoading(true);
-		setError(null);
-
-		try {
-			const reqCommentPost = await axios.post("/comments", {
-				productId,
-				comment,
-				rating,
-				createdAt: new Date(),
-			});
-			const resCommentPost = await reqCommentPost.data;
-
-			const insertedReview: Review = { ...resCommentPost };
-
-			setReviews([...reviews, insertedReview]);
-			setComment("");
-			setRating(0);
-		} catch (err: any) {
-			setError(err);
-		}
-
-		setLoading(false);
-	};
+	const {
+		handleSendComment,
+		comment,
+		setComment,
+		loading,
+		error,
+		rating,
+		setRating,
+	} = useReviews(productId, setReviews, reviews);
 
 	return (
 		<div>
@@ -159,53 +132,17 @@ const ReviewsContent = ({
 
 export default function ProductDetail() {
 	const params = useParams();
-	const navigate = useNavigate();
 	const { productId } = params;
 
-	const [product, setProduct] = useState<Product | null>(null);
-	const [reviews, setReviews] = useState<Review[]>([]);
-
-	const loadProduct = async () => {
-		try {
-			await wait();
-			const reqProduct = await axios.get("/products/" + productId);
-			const resProduct = await reqProduct.data;
-			setProduct(resProduct);
-
-			const reqReviews = await axios.get("/comments");
-			const resReviews: Review[] = await reqReviews.data;
-
-			const filteredReviews = resReviews.filter(
-				(review) => review.productId.toString() === productId
-			);
-
-			setReviews(filteredReviews);
-		} catch (e) {
-			console.log(e);
-			navigate("/products");
-			return;
-		}
-	};
-
-	const getAverageRating = () => {
-		if (!reviews.length) return 0;
-		return (
-			reviews.reduce(
-				(prev, val) => prev + parseFloat(val.rating.toString()),
-				0
-			) / reviews.length
-		);
-	};
-
-	useEffect(() => {
-		loadProduct();
-	}, []);
+	const { product, reviews, setReviews, getAverageRating } =
+		useProduct(productId);
 
 	if (!productId) {
-		navigate("/products");
-		return <></>;
+		return <Navigate to={"/products"} />;
 	}
-	if (!product) return <AppLoader label="Product Loading..." />;
+	if (!product) {
+		return <AppLoader label="Product Loading..." />;
+	}
 
 	return (
 		<div className={styles.ProductDetail}>

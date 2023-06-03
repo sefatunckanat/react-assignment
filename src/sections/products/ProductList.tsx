@@ -1,31 +1,10 @@
-import React, { useEffect, useState } from "react";
 import styles from "./ProductList.module.sass";
-import axios from "../../utils/axios";
 import { AppLoader, Avatar, Badge, StarRating, Title } from "../../components";
 import { NavLink } from "react-router-dom";
-import { wait } from "../../utils/helper";
-import { Product } from "../../global/types";
+import useProducts from "../../hooks/useProducts";
 
 export default function ProductList() {
-	const [products, setProducts] = useState<Product[]>([]);
-	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<null | string>(null);
-
-	const loadProducts = async () => {
-		setLoading(true);
-		try {
-			await wait();
-			const request = await axios.get("/products");
-			const response = request.data;
-			setProducts(response);
-		} catch (error) {
-			if (typeof error === "string") setError(error);
-		}
-		setLoading(false);
-	};
-	useEffect(() => {
-		loadProducts();
-	}, []);
+	const { loading, error, products } = useProducts();
 
 	return (
 		<div className={styles.ProductList}>
