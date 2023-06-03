@@ -19,13 +19,15 @@ export default function LoginForm() {
 		<form className={styles.LoginForm} onSubmit={handleOnSubmit}>
 			<TextInput
 				type="text"
-				label="E-mail"
+				placeholder="Enter e-mail"
+				label="E-Mail"
 				value={email}
 				onChange={(e) => setEmail(e.target.value)}
 				required
 			/>
 			<TextInput
 				type="password"
+				placeholder="Enter password"
 				label="Password"
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
